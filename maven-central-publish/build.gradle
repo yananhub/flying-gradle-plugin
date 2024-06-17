@@ -1,0 +1,46 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'com.gradle.plugin-publish' version '1.2.1'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group = 'tech.yanand.plugin'
+version = '0.1.0-beta'
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+java {
+    sourceCompatibility = '17'
+    withJavadocJar()
+    withSourcesJar()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+gradlePlugin {
+    website = 'https://github.com/yananhub/flying-gradle-plugin'
+    vcsUrl = 'https://github.com/yananhub/flying-gradle-plugin.git'
+    plugins {
+        mavenCentralPublishPlugin {
+            id = 'tech.yanand.plugin.maven-central-publish'
+            displayName = 'Maven Central Portal Publish Plugin'
+            description = 'A plugin that allows you to publish repositories to the Maven Central Portal (new publish process)'
+            tags.addAll('maven', 'maven publish', 'maven central', 'maven central portal')
+            implementationClass = 'tech.yanand.plugin.MavenCentralPublishPlugin'
+        }
+    }
+}
+
+signing {
+    if (System.getenv('SIGNING_KEY')) {
+        def signingKey = System.getenv('SIGNING_KEY').replace('\\n', '\n')
+        def signingPassword = System.getenv('SIGNING_PASSWORD')
+        useInMemoryPgpKeys(signingKey, signingPassword)
+    }
+}
