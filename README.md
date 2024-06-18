@@ -54,7 +54,7 @@ mavenCentral {
     def dir = version.endsWith('SNAPSHOT') ? 'repos/snapshots' : 'repos/releases'
     repoDir = layout.buildDirectory.dir(dir)
 
-    uploadToken = '<your token>' // Token for Publisher AP calls obtained from Sonatype official
+    authToken = '<your token>' // Token for Publisher AP calls obtained from Sonatype official
 }
 ```
 

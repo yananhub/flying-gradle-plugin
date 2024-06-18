@@ -44,3 +44,9 @@ signing {
         useInMemoryPgpKeys(signingKey, signingPassword)
     }
 }
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
+}
