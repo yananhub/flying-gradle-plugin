@@ -35,8 +35,7 @@ publishing {
     repositories {
         maven {
             name = "Local"
-            def repoDir = version.endsWith('SNAPSHOT') ? 'repos/snapshots' : 'repos/releases'
-            url = layout.buildDirectory.dir(repoDir)
+            url = layout.buildDirectory.dir('repos/bundles')
         }
     }
 }
@@ -50,10 +49,9 @@ signing {
 }
 
 mavenCentral {
-    def dir = version.endsWith('SNAPSHOT') ? 'repos/snapshots' : 'repos/releases'
-    repoDir = layout.buildDirectory.dir(dir)
+    repoDir = layout.buildDirectory.dir('repos/bundles')
 
-    authToken = '<your token>' // 从 Sonatype 官方获取的 Publisher AP 调用的 token
+    authToken = '<your token>' // 从 Sonatype 官方获取的 Publisher API 调用的 token
 }
 ```
 
