@@ -1,4 +1,4 @@
-package tech.yanand.plugin;
+package tech.yanand.gradle;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;

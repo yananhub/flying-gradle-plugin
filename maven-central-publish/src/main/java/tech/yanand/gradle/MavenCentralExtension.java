@@ -1,4 +1,4 @@
-package tech.yanand.plugin;
+package tech.yanand.gradle;
 
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.provider.Property;

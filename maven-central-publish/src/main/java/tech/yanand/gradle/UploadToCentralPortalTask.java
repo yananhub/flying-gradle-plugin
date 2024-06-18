@@ -1,4 +1,4 @@
-package tech.yanand.plugin;
+package tech.yanand.gradle;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
@@ -13,9 +13,9 @@ import org.gradle.api.tasks.TaskAction;
 
 import java.io.IOException;
 
-import static tech.yanand.plugin.CentralPortalService.DeploymentStatus.FAILED;
-import static tech.yanand.plugin.CentralPortalService.DeploymentStatus.PUBLISHED;
-import static tech.yanand.plugin.CentralPortalService.DeploymentStatus.PUBLISHING;
+import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.FAILED;
+import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHED;
+import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHING;
 
 /**
  * The task used to upload a bundle to be published to the Maven central portal.

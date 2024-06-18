@@ -5,8 +5,8 @@ plugins {
     id 'signing'
 }
 
-group = 'tech.yanand.plugin'
-version = '0.1.0-beta'
+group = 'tech.yanand.gradle'
+version = '0.1.0-beta.2'
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.2')
@@ -28,11 +28,11 @@ gradlePlugin {
     vcsUrl = 'https://github.com/yananhub/flying-gradle-plugin.git'
     plugins {
         mavenCentralPublishPlugin {
-            id = 'tech.yanand.plugin.maven-central-publish'
+            id = 'tech.yanand.gradle.maven-central-publish'
             displayName = 'Maven Central Portal Publish Plugin'
             description = 'A plugin that allows you to publish repositories to the Maven Central Portal (new publish process)'
             tags.addAll('maven', 'maven publish', 'maven central', 'maven central portal')
-            implementationClass = 'tech.yanand.plugin.MavenCentralPublishPlugin'
+            implementationClass = 'tech.yanand.gradle.MavenCentralPublishPlugin'
         }
     }
 }

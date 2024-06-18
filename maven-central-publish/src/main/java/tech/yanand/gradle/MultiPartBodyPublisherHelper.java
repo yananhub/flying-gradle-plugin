@@ -1,4 +1,4 @@
-package tech.yanand.plugin;
+package tech.yanand.gradle;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Path;

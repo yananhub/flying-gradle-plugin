@@ -1,4 +1,4 @@
-package tech.yanand.plugin;
+package tech.yanand.gradle;
 
 import groovy.json.JsonSlurper;
 import org.gradle.api.GradleException;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static java.net.http.HttpRequest.BodyPublishers.noBody;
-import static tech.yanand.plugin.MultiPartBodyPublisherHelper.getFilePartPublisher;
+import static tech.yanand.gradle.MultiPartBodyPublisherHelper.getFilePartPublisher;
 
 class CentralPortalService {
 

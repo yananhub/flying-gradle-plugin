@@ -12,7 +12,7 @@
 plugins {
     id 'maven-publish'
     id 'signing'
-    id 'tech.yanand.plugin.maven-central-publish' version 'x.y.z'
+    id 'tech.yanand.gradle.maven-central-publish' version 'x.y.z'
 }
 
 java {
