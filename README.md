@@ -1,4 +1,4 @@
-# A plugin that allows you to publish repositories to the Maven Central Portal (new publish process)
+# Maven Central Portal publish plugin (new publish process)
 
 **Read this in other languages: [English](README.md), [中文](README_zh.md).**
 

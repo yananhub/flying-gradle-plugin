@@ -1,4 +1,4 @@
-# 请求和线程范围的 Spring 缓存扩展
+# Maven Central Portal Gradle 发布插件（新发布流程）
 
 **其他语言版本: [English](README.md), [中文](README_zh.md).**
 
