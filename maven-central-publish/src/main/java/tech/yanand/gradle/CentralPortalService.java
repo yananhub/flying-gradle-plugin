@@ -69,7 +69,7 @@ class CentralPortalService {
         }
     }
 
-    class DeploymentStatus {
+    final class DeploymentStatus {
         private DeploymentStatus() {
             // Instantiation is not allowed
         }

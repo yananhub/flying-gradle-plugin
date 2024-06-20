@@ -12,6 +12,7 @@ import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.FAILED;
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHED;
@@ -23,6 +24,10 @@ import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHIN
  * @author Richard Zhang
  */
 public abstract class UploadToCentralPortalTask extends DefaultTask {
+
+    private static final int CHECK_STATUS_COUNT = 6;
+
+    private static final String CHECKING_URL = "https://central.sonatype.com/publishing/deployments";
 
     static final String NAME = "publishToMavenCentralPortal";
 
@@ -63,20 +68,27 @@ public abstract class UploadToCentralPortalTask extends DefaultTask {
 
         String deploymentId = centralPortalService.uploadBundle(uploadUrl.get(), authToken.get(), uploadFile.get().getAsFile().toPath());
 
-        var count = 0;
-        while (count < 5) {
+        int count = 1;
+        while (count <= CHECK_STATUS_COUNT) {
+            TimeUnit.SECONDS.sleep(10);
+
             String deploymentStatus = centralPortalService.getDeploymentStatus(statusUrl.get(), authToken.get(), deploymentId);
 
             if (deploymentStatus == null) {
                 throw new GradleException("The API did not return the 'deploymentState' field.");
             } else if (FAILED.equals(deploymentStatus)) {
-                throw new GradleException(String.format("Deployment Status is failed: [%s].", deploymentStatus));
+                throw new GradleException(String.format("Deployment Status is failed: [%s], " +
+                        "please go to [%s] check your deployment.", deploymentStatus, CHECKING_URL));
             } else if (PUBLISHING.equals(deploymentStatus) || PUBLISHED.equals(deploymentStatus)) {
                 getLogger().lifecycle("Upload file success! current status: {}.", deploymentStatus);
                 return;
             } else {
-                count++;
-                Thread.sleep(5000);
+                ++count;
+            }
+
+            if (count == CHECK_STATUS_COUNT) {
+                throw new GradleException(String.format("Deployment haven't finished, status is: [%s], " +
+                        "please go to [%s] check your deployment.", deploymentStatus, CHECKING_URL));
             }
         }
     }

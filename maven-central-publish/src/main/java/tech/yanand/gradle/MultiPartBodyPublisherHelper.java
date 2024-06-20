@@ -8,7 +8,7 @@ import static java.net.http.HttpRequest.BodyPublishers.concat;
 import static java.net.http.HttpRequest.BodyPublishers.ofFile;
 import static java.net.http.HttpRequest.BodyPublishers.ofString;
 
-class MultiPartBodyPublisherHelper {
+final class MultiPartBodyPublisherHelper {
 
     private static final String CRLF = "\r\n";
 

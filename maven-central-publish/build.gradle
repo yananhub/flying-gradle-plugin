@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'tech.yanand.gradle'
-version = '0.1.0-beta.3'
+version = '0.1.0-beta.4'
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.2')
