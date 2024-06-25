@@ -38,4 +38,6 @@ jobs:
       - name: Publish to Maven Central Portal
         run: ./gradlew publish publishToMavenCentralPortal
         env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           MAVEN_UPLOAD_TOKEN: ${{ secrets.MAVEN_UPLOAD_TOKEN }}
