@@ -10,6 +10,8 @@ class DefaultMavenCentralExtension implements MavenCentralExtension {
 
     private static final String STATUS_URL = "https://central.sonatype.com/api/v1/publisher/status?id=";
 
+    private static final Integer MAX_WAIT = 60;
+
     private Property<String> uploadUrl;
 
     private Property<String> statusUrl;
@@ -18,6 +20,8 @@ class DefaultMavenCentralExtension implements MavenCentralExtension {
 
     private DirectoryProperty repoDir;
 
+    private Property<Integer> maxWait;
+
     public DefaultMavenCentralExtension(ObjectFactory objectFactory) {
         uploadUrl = objectFactory.property(String.class)
                 .convention(UPLOAD_URL);
@@ -25,6 +29,8 @@ class DefaultMavenCentralExtension implements MavenCentralExtension {
                 .convention(STATUS_URL);
         authToken = objectFactory.property(String.class);
         repoDir = objectFactory.directoryProperty();
+        maxWait = objectFactory.property(Integer.class)
+                .convention(MAX_WAIT);
     }
 
     @Override
@@ -45,5 +51,10 @@ class DefaultMavenCentralExtension implements MavenCentralExtension {
     @Override
     public DirectoryProperty getRepoDir() {
         return repoDir;
+    }
+
+    @Override
+    public Property<Integer> getMaxWait() {
+        return maxWait;
     }
 }

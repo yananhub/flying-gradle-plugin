@@ -10,7 +10,7 @@ import static java.net.http.HttpRequest.BodyPublishers.ofString;
 
 final class MultiPartBodyPublisherHelper {
 
-    private static final String CRLF = "\r\n";
+    static final String CRLF = "\r\n";
 
     private MultiPartBodyPublisherHelper() {
         // Instantiation is not allowed.

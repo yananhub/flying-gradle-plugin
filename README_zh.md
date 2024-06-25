@@ -1,10 +1,10 @@
-# Maven Central Portal Gradle 发布插件（新发布流程）
-
 **其他语言版本: [English](README.md), [中文](README_zh.md).**
 
-根据 Sonatype 官方说明，所有的仓库都要通过 Central Portal 发布。然而现在还没有官方 Gradle 插件来完成这个事情。本项目就是
-一个基于Gradle内置的插件来实现它。实现大致思路是，先使用 Gradle 内置的 "maven-publish" 插件将包发布到本地仓库，然后将本地
-仓库中的资源打包成 bundle，最后上传到 Maven Central Portal。
+# Maven Central Portal Gradle 发布插件（新发布流程）
+
+根据 Sonatype 官方说明，从2024年3月12日开始，所有的仓库都要通过 Central Portal 发布。然而现在还没有官方 Gradle 插件来完成
+这个事情。本项目就是一个基于Gradle内置的插件来实现它。实现大致思路是，先使用 Gradle 内置的 "maven-publish" 插件将包发布到
+本地仓库，然后将本地仓库中的资源打包成 bundle，最后上传到 Maven Central Portal。
 
 要使用这个插件，只需要在 `build.gradle` 文件中加入以下内容：
 
@@ -41,6 +41,7 @@ publishing {
 }
 
 signing {
+    // 关于 GPG 签名, 请参考 https://central.sonatype.org/publish/requirements/gpg/
     def signingKey = '<your signing key>'
     def signingPassword = '<your signing password>'
     useInMemoryPgpKeys(signingKey, signingPassword)
@@ -50,8 +51,8 @@ signing {
 
 mavenCentral {
     repoDir = layout.buildDirectory.dir('repos/bundles')
-
-    authToken = '<your token>' // 从 Sonatype 官方获取的 Publisher API 调用的 token
+    // 从 Sonatype 官方获取的 Publisher API 调用的 token，应为 Base64 编码后的 username:password
+    authToken = '<your token>'
 }
 ```
 

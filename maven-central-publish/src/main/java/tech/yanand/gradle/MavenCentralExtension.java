@@ -43,4 +43,11 @@ public interface MavenCentralExtension {
      * @return Repository directory
      */
     DirectoryProperty getRepoDir();
+
+    /**
+     * Max wait time for status API to get 'PUBLISHING' or 'PUBLISHED' status.
+     *
+     * @return Duration in second
+     */
+    Property<Integer> getMaxWait();
 }

@@ -25,8 +25,8 @@ public abstract class MavenCentralPublishPlugin implements Plugin<Project> {
         zipTask.setGroup(CENTRAL_PUBLISH_TASK_GROUP);
         zipTask.from(extension.getRepoDir());
 
-        UploadToCentralPortalTask uploadTask = taskContainer
-                .register(UploadToCentralPortalTask.NAME, UploadToCentralPortalTask.class).get();
+        PublishToCentralPortalTask uploadTask = taskContainer
+                .register(PublishToCentralPortalTask.NAME, PublishToCentralPortalTask.class).get();
         uploadTask.setGroup(CENTRAL_PUBLISH_TASK_GROUP);
         uploadTask.dependsOn(zipTask);
 

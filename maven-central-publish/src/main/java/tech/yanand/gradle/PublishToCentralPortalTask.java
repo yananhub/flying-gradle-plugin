@@ -1,10 +1,9 @@
 package tech.yanand.gradle;
 
 import org.gradle.api.DefaultTask;
-import org.gradle.api.GradleException;
-import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.model.ObjectFactory;
+import org.gradle.api.plugins.ExtensionContainer;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
@@ -17,19 +16,22 @@ import java.util.concurrent.TimeUnit;
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.FAILED;
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHED;
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHING;
+import static tech.yanand.gradle.ExceptionFactory.apiNotReturnDeploymentStateField;
+import static tech.yanand.gradle.ExceptionFactory.authTokenNotProvided;
+import static tech.yanand.gradle.ExceptionFactory.deploymentNotFinished;
+import static tech.yanand.gradle.ExceptionFactory.deploymentStatusIsField;
+import static tech.yanand.gradle.ExceptionFactory.uploadFileMustProvided;
 
 /**
  * The task used to upload a bundle to be published to the Maven central portal.
  *
  * @author Richard Zhang
  */
-public abstract class UploadToCentralPortalTask extends DefaultTask {
-
-    private static final int CHECK_STATUS_COUNT = 6;
-
-    private static final String CHECKING_URL = "https://central.sonatype.com/publishing/deployments";
+public abstract class PublishToCentralPortalTask extends DefaultTask {
 
     static final String NAME = "publishToMavenCentralPortal";
+
+    private static final int WAIT_DURATION = 10;
 
     private Property<String> uploadUrl;
 
@@ -39,6 +41,8 @@ public abstract class UploadToCentralPortalTask extends DefaultTask {
 
     private RegularFileProperty uploadFile;
 
+    private Property<Integer> maxWait;
+
     private CentralPortalService centralPortalService = new CentralPortalService();
 
     /**
@@ -46,39 +50,43 @@ public abstract class UploadToCentralPortalTask extends DefaultTask {
      *
      * @see DefaultMavenCentralExtension
      */
-    public UploadToCentralPortalTask() {
+    public PublishToCentralPortalTask() {
         ObjectFactory objectFactory = getProject().getObjects();
-        MavenCentralExtension extension = getProject().getExtensions().findByType(MavenCentralExtension.class);
+        ExtensionContainer extensions = getProject().getExtensions();
+        MavenCentralExtension extension = extensions.findByType(MavenCentralExtension.class);
+        extension = extension != null ? extension
+                : extensions.create(MavenCentralExtension.class, MavenCentralExtension.NAME, DefaultMavenCentralExtension.class, getProject().getObjects());
 
         uploadUrl = extension.getUploadUrl();
         statusUrl = extension.getStatusUrl();
         authToken = extension.getAuthToken();
         uploadFile = objectFactory.fileProperty();
+        maxWait = extension.getMaxWait();
     }
 
     @TaskAction
     void executeTask() throws InterruptedException, IOException {
         if (!authToken.isPresent()) {
-            throw new InvalidUserDataException("Error when upload to Maven Central Portal, the upload token does not provided!");
+            throw authTokenNotProvided();
         }
 
         if (!uploadFile.isPresent()) {
-            throw new InvalidUserDataException("Upload file must be provided!");
+            throw uploadFileMustProvided();
         }
 
         String deploymentId = centralPortalService.uploadBundle(uploadUrl.get(), authToken.get(), uploadFile.get().getAsFile().toPath());
 
-        int count = 1;
-        while (count <= CHECK_STATUS_COUNT) {
-            TimeUnit.SECONDS.sleep(10);
+        int count = 0;
+        int checkCount = getCheckCount();
+        while (count < checkCount) {
+            TimeUnit.SECONDS.sleep(WAIT_DURATION);
 
             String deploymentStatus = centralPortalService.getDeploymentStatus(statusUrl.get(), authToken.get(), deploymentId);
 
             if (deploymentStatus == null) {
-                throw new GradleException("The API did not return the 'deploymentState' field.");
+                throw apiNotReturnDeploymentStateField();
             } else if (FAILED.equals(deploymentStatus)) {
-                throw new GradleException(String.format("Deployment Status is failed: [%s], " +
-                        "please go to [%s] check your deployment.", deploymentStatus, CHECKING_URL));
+                throw deploymentStatusIsField(deploymentStatus);
             } else if (PUBLISHING.equals(deploymentStatus) || PUBLISHED.equals(deploymentStatus)) {
                 getLogger().lifecycle("Upload file success! current status: {}.", deploymentStatus);
                 return;
@@ -86,9 +94,8 @@ public abstract class UploadToCentralPortalTask extends DefaultTask {
                 ++count;
             }
 
-            if (count == CHECK_STATUS_COUNT) {
-                throw new GradleException(String.format("Deployment haven't finished, status is: [%s], " +
-                        "please go to [%s] check your deployment.", deploymentStatus, CHECKING_URL));
+            if (count == checkCount) {
+                throw deploymentNotFinished(deploymentStatus);
             }
         }
     }
@@ -132,5 +139,20 @@ public abstract class UploadToCentralPortalTask extends DefaultTask {
     @InputFile
     public RegularFileProperty getUploadFile() {
         return uploadFile;
+    }
+
+    /**
+     * Max wait time for status API to get 'PUBLISHING' or 'PUBLISHED' status.
+     *
+     * @return Duration in second
+     */
+    @Input
+    public Property<Integer> getMaxWait() {
+        return maxWait;
+    }
+
+    private int getCheckCount() {
+        int checkCount = getMaxWait().get() / WAIT_DURATION;
+        return checkCount <= 0 ? 1 : checkCount;
     }
 }

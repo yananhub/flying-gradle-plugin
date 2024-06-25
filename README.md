@@ -1,11 +1,11 @@
-# Maven Central Portal publish plugin (new publish process)
-
 **Read this in other languages: [English](README.md), [中文](README_zh.md).**
 
-According to Sonatype, all repositories will be published through the Central Portal. However, there is currently no
-official Gradle plugin to do this. This project is based on Gradle built-in plugin to implement it. The general idea
-is to use Gradle's built-in "maven-publish" plugin to publish the package to the local repository, then package the
-resources in the local repository into bundles, and finally upload them to the Maven Central Portal.
+# Maven Central Portal publish plugin (new publish process)
+
+According to Sonatype, from March 12th, 2024, all repositories will be published through the Central Portal. However,
+there is currently no official Gradle plugin to do this. This project is based on Gradle built-in plugin to implement
+it. The general idea is to use Gradle's built-in "maven-publish" plugin to publish the package to the local repository,
+then package the resources in the local repository into a bundle, and finally upload it to the Maven Central Portal.
 
 To use the plugin, just add the following to the `build.gradle` file:
 
@@ -42,6 +42,7 @@ publishing {
 }
 
 signing {
+    // About GPG signing, please refer to https://central.sonatype.org/publish/requirements/gpg/
     def signingKey = '<your signing key>'
     def signingPassword = '<your signing password>'
     useInMemoryPgpKeys(signingKey, signingPassword)
@@ -51,8 +52,9 @@ signing {
 
 mavenCentral {
     repoDir = layout.buildDirectory.dir('repos/bundles')
-
-    authToken = '<your token>' // Token for Publisher API calls obtained from Sonatype official
+    // Token for Publisher API calls obtained from Sonatype official,
+    // it should be Base64 encoded of "username:password".
+    authToken = '<your token>'
 }
 ```
 
