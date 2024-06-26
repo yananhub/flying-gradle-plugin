@@ -1,7 +1,6 @@
 plugins {
     id 'java-gradle-plugin'
     id 'com.gradle.plugin-publish' version '1.2.1'
-    id 'maven-publish'
     id 'signing'
     id 'tech.yanand.gradle.maven-central-publish' version '0.1.0-beta.4'
 }
@@ -35,7 +34,7 @@ gradlePlugin {
     vcsUrl = 'https://github.com/yananhub/flying-gradle-plugin.git'
     plugins {
         mavenCentralPublishPlugin {
-            id = 'tech.yanand.gradle.maven-central-publish'
+            id = 'tech.yanand.maven-central-publish'
             displayName = 'Maven Central Portal Publish Plugin'
             description = 'A plugin that allows you to publish repositories to the Maven Central Portal (new publish process)'
             tags.addAll('maven', 'maven publish', 'maven central', 'maven central portal')
@@ -45,42 +44,29 @@ gradlePlugin {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
+    publications.configureEach {
+        pom {
+            name = 'Maven Central Portal Publish Plugin'
+            description = 'A plugin that allows you to publish repositories to the Maven Central Portal (new publish process)'
+            url = 'https://github.com/yananhub/flying-gradle-plugin'
 
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
+            licenses {
+                license {
+                    name = 'The Apache License, Version 2.0'
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                 }
             }
-
-            pom {
-                name = 'Maven Central Portal Publish Plugin'
-                description = 'A plugin that allows you to publish repositories to the Maven Central Portal (new publish process)'
+            developers {
+                developer {
+                    id = 'yananhub'
+                    name = 'Richard Zhang'
+                    email = 'yanandwy@163.com'
+                }
+            }
+            scm {
+                connection = 'scm:git:https://github.com/yananhub/flying-gradle-plugin.git'
+                developerConnection = 'scm:git:https://github.com/yananhub/flying-gradle-plugin.git'
                 url = 'https://github.com/yananhub/flying-gradle-plugin'
-
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'yananhub'
-                        name = 'Richard Zhang'
-                        email = 'yanandwy@163.com'
-                    }
-                }
-                scm {
-                    connection = 'scm:git:https://github.com/yananhub/flying-gradle-plugin.git'
-                    developerConnection = 'scm:git:https://github.com/yananhub/flying-gradle-plugin.git'
-                    url = 'https://github.com/yananhub/flying-gradle-plugin'
-                }
             }
         }
     }

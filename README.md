@@ -13,7 +13,7 @@ To use the plugin, just add the following to the `build.gradle` file:
 plugins {
     id 'maven-publish'
     id 'signing'
-    id 'tech.yanand.gradle.maven-central-publish' version 'x.y.z'
+    id 'tech.yanand.maven-central-publish' version 'x.y.z'
 }
 
 java {
