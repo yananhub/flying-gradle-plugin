@@ -2,11 +2,11 @@ plugins {
     id 'java-gradle-plugin'
     id 'com.gradle.plugin-publish' version '1.2.1'
     id 'signing'
-    id 'tech.yanand.gradle.maven-central-publish' version '0.1.0-beta.4'
+    id 'tech.yanand.maven-central-publish' version '0.1.0-beta.5'
 }
 
 group = 'tech.yanand.gradle'
-version = '0.1.0-beta.5'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
