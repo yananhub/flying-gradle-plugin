@@ -2,9 +2,10 @@
 
 # Maven Central Portal publish plugin (new publish process)
 
-According to Sonatype, from March 12th, 2024, all repositories will be published through the Central Portal. However,
-there is currently no official Gradle plugin to do this. This project is based on Gradle built-in plugin to implement
-it. The general idea is to use Gradle's built-in "maven-publish" plugin to publish the package to the local repository,
+According to Sonatype, the Central Portal will replace the legacy OSSRH service for publishing.
+However, there is currently no official Gradle plugin to do this.
+This project is based on Gradle built-in plugin to implement it.
+The general idea is to use Gradle's built-in "maven-publish" plugin to publish the package to the local repository,
 then package the resources in the local repository into a bundle, and finally upload it to the Maven Central Portal.
 
 To use the plugin, just add the following to the `build.gradle` file:
@@ -13,6 +14,7 @@ To use the plugin, just add the following to the `build.gradle` file:
 plugins {
     id 'maven-publish'
     id 'signing'
+    // The Central Portal publish plugin
     id 'tech.yanand.maven-central-publish' version 'x.y.z'
 }
 

@@ -2,9 +2,10 @@
 
 # Maven Central Portal Gradle 发布插件（新发布流程）
 
-根据 Sonatype 官方说明，从2024年3月12日开始，所有的仓库都要通过 Central Portal 发布。然而现在还没有官方 Gradle 插件来完成
-这个事情。本项目就是一个基于Gradle内置的插件来实现它。实现大致思路是，先使用 Gradle 内置的 "maven-publish" 插件将包发布到
-本地仓库，然后将本地仓库中的资源打包成 bundle，最后上传到 Maven Central Portal。
+根据 Sonatype 官方说明，Central Portal 将取代传统的 OSSRH 服务发布仓库。
+然而现在还没有官方 Gradle 插件来完成这个事情。本项目就是一个基于Gradle内置的插件来实现它。
+实现大致思路是，先使用 Gradle 内置的 "maven-publish" 插件将包发布到 本地仓库，
+然后将本地仓库中的资源打包成 bundle，最后上传到 Maven Central Portal。
 
 要使用这个插件，只需要在 `build.gradle` 文件中加入以下内容：
 
@@ -12,6 +13,7 @@
 plugins {
     id 'maven-publish'
     id 'signing'
+    // Central Portal 发布插件
     id 'tech.yanand.maven-central-publish' version 'x.y.z'
 }
 
