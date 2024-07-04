@@ -170,7 +170,7 @@ class PublishToCentralPortalTaskTest {
         when(authToken.isPresent()).thenReturn(true);
         when(uploadFile.isPresent()).thenReturn(true);
         when(uploadUrl.get()).thenReturn(UPLOAD_URL);
-        when(publishingType.getOrElse(PublishingType.AUTOMATIC)).thenReturn(currentPublishingType);
+        when(publishingType.get()).thenReturn(currentPublishingType);
         when(statusUrl.get()).thenReturn(STATUS_URL);
         when(authToken.get()).thenReturn(AUTH_TOKEN);
         when(uploadFile.get()).thenReturn(regularFile);

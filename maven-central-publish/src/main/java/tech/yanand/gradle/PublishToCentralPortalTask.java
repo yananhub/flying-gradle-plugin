@@ -78,7 +78,7 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
             throw uploadFileMustProvided();
         }
 
-        PublishingType currentPublishingType = publishingType.getOrElse(PublishingType.AUTOMATIC);
+        PublishingType currentPublishingType = publishingType.get();
         String deploymentId = centralPortalService.uploadBundle(uploadUrl.get(), currentPublishingType, authToken.get(), uploadFile.get().getAsFile().toPath());
 
         int count = 0;
