@@ -23,6 +23,13 @@ public interface MavenCentralExtension {
     Property<String> getUploadUrl();
 
     /**
+     * Whether to publish automatically or manually after a successful upload.
+     *
+     * @return Publishing type
+     */
+    Property<PublishingType> getPublishingType();
+
+    /**
      * The URL for retrieving status of a deployment.
      *
      * @return URL string
@@ -45,9 +52,11 @@ public interface MavenCentralExtension {
     DirectoryProperty getRepoDir();
 
     /**
-     * Max wait time for status API to get 'PUBLISHING' or 'PUBLISHED' status.
+     * Max wait time for status API to get 'PUBLISHING' or 'PUBLISHED' status when the
+     * publishing type is 'AUTOMATIC', or additionally 'VALIDATED' when the publishing type is
+     * 'USER_MANAGED'.
      *
-     * @return Duration in second
+     * @return Duration in seconds
      */
     Property<Integer> getMaxWait();
 }

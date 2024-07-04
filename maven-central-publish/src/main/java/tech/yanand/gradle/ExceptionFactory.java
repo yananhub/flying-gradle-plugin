@@ -22,7 +22,7 @@ final class ExceptionFactory {
 
     static final String DEPLOYMENT_STATUS_IS_FIELD = "Deployment Status is failed: [%s], please go to [%s] check your deployment.";
 
-    static final String DEPLOYMENT_NOT_FINISHED = "Deployment haven't finished, status is: [%s], please go to [%s] check your deployment.";
+    static final String DEPLOYMENT_NOT_FINISHED = "Deployment hasn't finished, status is: [%s], please go to [%s] check your deployment.";
 
     static final String CHECKING_URL = "https://central.sonatype.com/publishing/deployments";
 

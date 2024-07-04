@@ -55,6 +55,9 @@ mavenCentral {
     repoDir = layout.buildDirectory.dir('repos/bundles')
     // 从 Sonatype 官方获取的 Publisher API 调用的 token，应为 Base64 编码后的 username:password
     authToken = '<your token>'
+    // 上传是否应该自动发布。
+    // 如果您希望手动执行此操作，请使用 USER_MANAGED。
+    publishingType.set(PublishingType.AUTOMATIC)
 }
 ```
 

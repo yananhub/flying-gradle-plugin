@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.FAILED;
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHED;
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHING;
+import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.VALIDATED;
 import static tech.yanand.gradle.ExceptionFactory.apiNotReturnDeploymentStateField;
 import static tech.yanand.gradle.ExceptionFactory.authTokenNotProvided;
 import static tech.yanand.gradle.ExceptionFactory.deploymentNotFinished;
@@ -34,6 +35,8 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
     private static final int WAIT_DURATION = 10;
 
     private Property<String> uploadUrl;
+
+    private Property<PublishingType> publishingType;
 
     private Property<String> statusUrl;
 
@@ -58,6 +61,7 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
                 : extensions.create(MavenCentralExtension.class, MavenCentralExtension.NAME, DefaultMavenCentralExtension.class, getProject().getObjects());
 
         uploadUrl = extension.getUploadUrl();
+        publishingType = extension.getPublishingType();
         statusUrl = extension.getStatusUrl();
         authToken = extension.getAuthToken();
         uploadFile = objectFactory.fileProperty();
@@ -74,7 +78,8 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
             throw uploadFileMustProvided();
         }
 
-        String deploymentId = centralPortalService.uploadBundle(uploadUrl.get(), authToken.get(), uploadFile.get().getAsFile().toPath());
+        PublishingType currentPublishingType = publishingType.getOrElse(PublishingType.AUTOMATIC);
+        String deploymentId = centralPortalService.uploadBundle(uploadUrl.get(), currentPublishingType, authToken.get(), uploadFile.get().getAsFile().toPath());
 
         int count = 0;
         int checkCount = getCheckCount();
@@ -87,11 +92,19 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
                 throw apiNotReturnDeploymentStateField();
             } else if (FAILED.equals(deploymentStatus)) {
                 throw deploymentStatusIsField(deploymentStatus);
-            } else if (PUBLISHING.equals(deploymentStatus) || PUBLISHED.equals(deploymentStatus)) {
-                getLogger().lifecycle("Upload file success! current status: {}.", deploymentStatus);
-                return;
             } else {
-                ++count;
+                boolean isSuccessful = PUBLISHING.equals(deploymentStatus) || PUBLISHED.equals(deploymentStatus);
+
+                if (currentPublishingType == PublishingType.USER_MANAGED) {
+                    isSuccessful = isSuccessful || VALIDATED.equals(deploymentStatus);
+                }
+
+                if (isSuccessful) {
+                    getLogger().lifecycle("Upload file success! current status: {}.", deploymentStatus);
+                    return;
+                } else {
+                    ++count;
+                }
             }
 
             if (count == checkCount) {
@@ -142,14 +155,24 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
     }
 
     /**
-     * Max wait time for status API to get 'PUBLISHING' or 'PUBLISHED' status.
+     * Max wait time for status API to get 'PUBLISHING' or 'PUBLISHED' status when the
+     * publishing type is 'AUTOMATIC', or additionally 'VALIDATED' when the publishing type is
+     * 'USER_MANAGED'.
      *
-     * @return Duration in second
+     * @return Duration in seconds
      */
     @Input
     public Property<Integer> getMaxWait() {
         return maxWait;
     }
+
+    /**
+     * Whether to publish automatically or manually after a successful upload.
+     *
+     * @return Publishing type
+     */
+    @Input
+    public Property<PublishingType> getPublishingType() { return publishingType; }
 
     private int getCheckCount() {
         int checkCount = getMaxWait().get() / WAIT_DURATION;
