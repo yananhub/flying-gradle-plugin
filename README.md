@@ -60,7 +60,7 @@ mavenCentral {
 
     // Whether the upload should be automatically published or not.
     // Use `USER_MANAGED` if you wish to do this manually.
-    // Defaults to `AUTOMATIC`.
+    // This property is optional and defaults to `AUTOMATIC`.
     publishingType = PublishingType.AUTOMATIC
 }
 ```

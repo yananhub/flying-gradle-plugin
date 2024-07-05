@@ -57,7 +57,7 @@ mavenCentral {
     authToken = '<your token>'
     // 上传是否应该自动发布。
     // 如果您希望手动执行此操作，请使用 USER_MANAGED。
-    // 默认为`AUTOMATIC`。
+    // 该属性是可选的，默认为“AUTOMATIC”。
     publishingType = PublishingType.AUTOMATIC
 }
 ```
