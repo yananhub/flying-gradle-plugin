@@ -14,7 +14,7 @@ class DefaultMavenCentralExtension implements MavenCentralExtension {
 
     private Property<String> uploadUrl;
 
-    private Property<PublishingType> publishingType;
+    private Property<String> publishingType;
 
     private Property<String> statusUrl;
 
@@ -29,7 +29,7 @@ class DefaultMavenCentralExtension implements MavenCentralExtension {
                 .convention(UPLOAD_URL);
         statusUrl = objectFactory.property(String.class)
                 .convention(STATUS_URL);
-        publishingType = objectFactory.property(PublishingType.class)
+        publishingType = objectFactory.property(String.class)
                 .convention(PublishingType.AUTOMATIC);
         authToken = objectFactory.property(String.class);
         repoDir = objectFactory.directoryProperty();
@@ -43,7 +43,7 @@ class DefaultMavenCentralExtension implements MavenCentralExtension {
     }
 
     @Override
-    public Property<PublishingType> getPublishingType() { return publishingType; }
+    public Property<String> getPublishingType() { return publishingType; }
 
     @Override
     public Property<String> getStatusUrl() {

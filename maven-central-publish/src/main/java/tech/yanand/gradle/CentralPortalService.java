@@ -27,7 +27,7 @@ class CentralPortalService {
 
     private HttpClient httpClient = HttpClient.newHttpClient();
 
-    String uploadBundle(String url, PublishingType publishingType, String token, Path uploadFile) throws IOException, InterruptedException {
+    String uploadBundle(String url, String publishingType, String token, Path uploadFile) throws IOException, InterruptedException {
         String boundary = UUID.randomUUID().toString().replace("-", "");
         BodyPublisher filePartPublisher = getFilePartPublisher(boundary, uploadFile);
 

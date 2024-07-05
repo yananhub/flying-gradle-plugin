@@ -5,7 +5,6 @@ import org.gradle.api.Project;
 import org.gradle.api.file.RegularFile;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.Property;
-import org.gradle.internal.impldep.org.testng.internal.Nullable;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +32,7 @@ import static tech.yanand.gradle.ExceptionFactory.AUTH_TOKEN_NOT_PROVIDED;
 import static tech.yanand.gradle.ExceptionFactory.CHECKING_URL;
 import static tech.yanand.gradle.ExceptionFactory.DEPLOYMENT_NOT_FINISHED;
 import static tech.yanand.gradle.ExceptionFactory.DEPLOYMENT_STATUS_IS_FIELD;
+import static tech.yanand.gradle.ExceptionFactory.PUBLISHING_TYPE_INVALID;
 import static tech.yanand.gradle.ExceptionFactory.UPLOAD_FILE_MUST_PROVIDED;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,7 +57,7 @@ class PublishToCentralPortalTaskTest {
     private Property<String> uploadUrl;
 
     @Mock
-    private Property<PublishingType> publishingType;
+    private Property<String> publishingType;
 
     @Mock
     private Property<String> statusUrl;
@@ -98,6 +98,17 @@ class PublishToCentralPortalTaskTest {
         GradleException actual = assertThrows(GradleException.class, underTest::executeTask);
 
         assertEquals(UPLOAD_FILE_MUST_PROVIDED, actual.getMessage());
+    }
+
+    @Test
+    void executeTask_publishingTypeIsInvalid() {
+        when(authToken.isPresent()).thenReturn(true);
+        when(uploadFile.isPresent()).thenReturn(true);
+        when(publishingType.get()).thenReturn("INVALID_VALUE");
+
+        GradleException actual = assertThrows(GradleException.class, underTest::executeTask);
+
+        assertEquals(PUBLISHING_TYPE_INVALID, actual.getMessage());
     }
 
     @Test
@@ -166,7 +177,7 @@ class PublishToCentralPortalTaskTest {
         stubbingTheInput(PublishingType.AUTOMATIC);
     }
 
-    private void stubbingTheInput(PublishingType currentPublishingType) throws IOException, InterruptedException {
+    private void stubbingTheInput(String currentPublishingType) throws IOException, InterruptedException {
         when(authToken.isPresent()).thenReturn(true);
         when(uploadFile.isPresent()).thenReturn(true);
         when(uploadUrl.get()).thenReturn(UPLOAD_URL);

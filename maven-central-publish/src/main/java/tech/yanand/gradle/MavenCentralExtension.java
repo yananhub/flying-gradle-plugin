@@ -27,7 +27,7 @@ public interface MavenCentralExtension {
      *
      * @return Publishing type
      */
-    Property<PublishingType> getPublishingType();
+    Property<String> getPublishingType();
 
     /**
      * The URL for retrieving status of a deployment.

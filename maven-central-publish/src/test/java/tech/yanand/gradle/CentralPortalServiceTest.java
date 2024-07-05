@@ -127,7 +127,7 @@ class CentralPortalServiceTest {
         int statusCode = 201;
         String body = "test body";
         Path uploadFile = Files.createTempFile(tempDir, "test_bundle", ".zip");
-        PublishingType publishingType = PublishingType.AUTOMATIC;
+        String publishingType = PublishingType.AUTOMATIC;
 
         when(response.statusCode()).thenReturn(statusCode);
         when(response.body()).thenReturn(body);
@@ -149,7 +149,7 @@ class CentralPortalServiceTest {
         int statusCode = 201;
         String body = "test body";
         Path uploadFile = Files.createTempFile(tempDir, "test_bundle", ".zip");
-        PublishingType publishingType = PublishingType.USER_MANAGED;
+        String publishingType = PublishingType.USER_MANAGED;
 
         when(response.statusCode()).thenReturn(statusCode);
         when(response.body()).thenReturn(body);

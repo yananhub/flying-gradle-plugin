@@ -21,6 +21,7 @@ import static tech.yanand.gradle.ExceptionFactory.apiNotReturnDeploymentStateFie
 import static tech.yanand.gradle.ExceptionFactory.authTokenNotProvided;
 import static tech.yanand.gradle.ExceptionFactory.deploymentNotFinished;
 import static tech.yanand.gradle.ExceptionFactory.deploymentStatusIsField;
+import static tech.yanand.gradle.ExceptionFactory.publishingTypeInvalid;
 import static tech.yanand.gradle.ExceptionFactory.uploadFileMustProvided;
 
 /**
@@ -36,7 +37,7 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
 
     private Property<String> uploadUrl;
 
-    private Property<PublishingType> publishingType;
+    private Property<String> publishingType;
 
     private Property<String> statusUrl;
 
@@ -78,8 +79,11 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
             throw uploadFileMustProvided();
         }
 
-        PublishingType currentPublishingType = publishingType.get();
-        String deploymentId = centralPortalService.uploadBundle(uploadUrl.get(), currentPublishingType, authToken.get(), uploadFile.get().getAsFile().toPath());
+        if (!isValidPublishingType(publishingType.get())) {
+            throw publishingTypeInvalid();
+        }
+
+        String deploymentId = centralPortalService.uploadBundle(uploadUrl.get(), publishingType.get(), authToken.get(), uploadFile.get().getAsFile().toPath());
 
         int count = 0;
         int checkCount = getCheckCount();
@@ -103,12 +107,6 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
                 throw deploymentNotFinished(deploymentStatus);
             }
         }
-    }
-
-    private boolean isSuccessful(String deploymentStatus) {
-        return (publishingType.get() == PublishingType.USER_MANAGED && VALIDATED.equals(deploymentStatus))
-            || PUBLISHING.equals(deploymentStatus)
-            || PUBLISHED.equals(deploymentStatus);
     }
 
     /**
@@ -170,10 +168,21 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
      * @return Publishing type
      */
     @Input
-    public Property<PublishingType> getPublishingType() { return publishingType; }
+    public Property<String> getPublishingType() { return publishingType; }
 
     private int getCheckCount() {
         int checkCount = getMaxWait().get() / WAIT_DURATION;
         return checkCount <= 0 ? 1 : checkCount;
+    }
+
+    private boolean isSuccessful(String deploymentStatus) {
+        return (publishingType.get().equals(PublishingType.USER_MANAGED) && VALIDATED.equals(deploymentStatus))
+            || PUBLISHING.equals(deploymentStatus)
+            || PUBLISHED.equals(deploymentStatus);
+    }
+
+    private boolean isValidPublishingType(String publishingType) {
+        return publishingType.equals(PublishingType.AUTOMATIC)
+            || publishingType.equals(PublishingType.USER_MANAGED);
     }
 }
