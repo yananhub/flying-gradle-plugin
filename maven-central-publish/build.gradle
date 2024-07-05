@@ -94,4 +94,5 @@ javadoc {
 mavenCentral {
     repoDir = layout.buildDirectory.dir('repos/bundles')
     authToken = System.getenv('MAVEN_UPLOAD_TOKEN')
+    publishingType = 'AUTOMATIC'
 }

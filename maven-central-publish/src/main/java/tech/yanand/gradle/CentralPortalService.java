@@ -27,11 +27,11 @@ class CentralPortalService {
 
     private HttpClient httpClient = HttpClient.newHttpClient();
 
-    String uploadBundle(String url, String token, Path uploadFile) throws IOException, InterruptedException {
+    String uploadBundle(String url, String publishingType, String token, Path uploadFile) throws IOException, InterruptedException {
         String boundary = UUID.randomUUID().toString().replace("-", "");
         BodyPublisher filePartPublisher = getFilePartPublisher(boundary, uploadFile);
 
-        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url + publishingType))
                 .header("Authorization", "Bearer " + token)
                 .header("Content-Type", "multipart/form-data; boundary=" + boundary)
                 .POST(filePartPublisher)
@@ -79,5 +79,6 @@ class CentralPortalService {
         static final String PUBLISHING = "PUBLISHING";
         static final String PUBLISHED = "PUBLISHED";
         static final String PENDING = "PENDING";
+        static final String VALIDATED = "VALIDATED";
     }
 }

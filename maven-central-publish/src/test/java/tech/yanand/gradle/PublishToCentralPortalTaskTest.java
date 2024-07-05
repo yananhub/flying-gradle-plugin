@@ -26,11 +26,13 @@ import static org.mockito.Mockito.when;
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.FAILED;
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PENDING;
 import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHING;
+import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.VALIDATED;
 import static tech.yanand.gradle.ExceptionFactory.API_NOT_RETURN_DEPLOYMENT_STATE_FIELD;
 import static tech.yanand.gradle.ExceptionFactory.AUTH_TOKEN_NOT_PROVIDED;
 import static tech.yanand.gradle.ExceptionFactory.CHECKING_URL;
 import static tech.yanand.gradle.ExceptionFactory.DEPLOYMENT_NOT_FINISHED;
 import static tech.yanand.gradle.ExceptionFactory.DEPLOYMENT_STATUS_IS_FIELD;
+import static tech.yanand.gradle.ExceptionFactory.PUBLISHING_TYPE_INVALID;
 import static tech.yanand.gradle.ExceptionFactory.UPLOAD_FILE_MUST_PROVIDED;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,6 +55,9 @@ class PublishToCentralPortalTaskTest {
 
     @Mock
     private Property<String> uploadUrl;
+
+    @Mock
+    private Property<String> publishingType;
 
     @Mock
     private Property<String> statusUrl;
@@ -93,6 +98,17 @@ class PublishToCentralPortalTaskTest {
         GradleException actual = assertThrows(GradleException.class, underTest::executeTask);
 
         assertEquals(UPLOAD_FILE_MUST_PROVIDED, actual.getMessage());
+    }
+
+    @Test
+    void executeTask_publishingTypeIsInvalid() {
+        when(authToken.isPresent()).thenReturn(true);
+        when(uploadFile.isPresent()).thenReturn(true);
+        when(publishingType.get()).thenReturn("INVALID_VALUE");
+
+        GradleException actual = assertThrows(GradleException.class, underTest::executeTask);
+
+        assertEquals(PUBLISHING_TYPE_INVALID, actual.getMessage());
     }
 
     @Test
@@ -137,16 +153,41 @@ class PublishToCentralPortalTaskTest {
         assertEquals(format(DEPLOYMENT_NOT_FINISHED, PENDING, CHECKING_URL), actual.getMessage());
     }
 
+    @Test
+    void executeTask_deploymentValidatingInUserAutomaticPublishing() throws IOException, InterruptedException {
+        stubbingTheInput();
+
+        when(centralPortalService.getDeploymentStatus(STATUS_URL, AUTH_TOKEN, DEPLOYMENT_ID)).thenReturn(VALIDATED);
+
+        GradleException actual = assertThrows(GradleException.class, underTest::executeTask);
+
+        assertEquals(format(DEPLOYMENT_NOT_FINISHED, VALIDATED, CHECKING_URL), actual.getMessage());
+    }
+
+    @Test
+    void executeTask_deploymentValidatingInUserManagedPublishing() throws IOException, InterruptedException {
+        stubbingTheInput(PublishingType.USER_MANAGED);
+
+        when(centralPortalService.getDeploymentStatus(STATUS_URL, AUTH_TOKEN, DEPLOYMENT_ID)).thenReturn(VALIDATED);
+
+        assertDoesNotThrow(underTest::executeTask);
+    }
+
     private void stubbingTheInput() throws IOException, InterruptedException {
+        stubbingTheInput(PublishingType.AUTOMATIC);
+    }
+
+    private void stubbingTheInput(String currentPublishingType) throws IOException, InterruptedException {
         when(authToken.isPresent()).thenReturn(true);
         when(uploadFile.isPresent()).thenReturn(true);
         when(uploadUrl.get()).thenReturn(UPLOAD_URL);
+        when(publishingType.get()).thenReturn(currentPublishingType);
         when(statusUrl.get()).thenReturn(STATUS_URL);
         when(authToken.get()).thenReturn(AUTH_TOKEN);
         when(uploadFile.get()).thenReturn(regularFile);
         when(regularFile.getAsFile()).thenReturn(new File("bundle.zip"));
         when(maxWait.get()).thenReturn(10);
 
-        when(centralPortalService.uploadBundle(eq(UPLOAD_URL), eq(AUTH_TOKEN), any(Path.class))).thenReturn(DEPLOYMENT_ID);
+        when(centralPortalService.uploadBundle(eq(UPLOAD_URL), eq(currentPublishingType), eq(AUTH_TOKEN), any(Path.class))).thenReturn(DEPLOYMENT_ID);
     }
 }

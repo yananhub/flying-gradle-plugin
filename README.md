@@ -57,6 +57,11 @@ mavenCentral {
     // Token for Publisher API calls obtained from Sonatype official,
     // it should be Base64 encoded of "username:password".
     authToken = '<your token>'
+
+    // Whether the upload should be automatically published or not.
+    // Use `USER_MANAGED` if you wish to do this manually.
+    // This property is optional and defaults to `AUTOMATIC`.
+    publishingType = 'AUTOMATIC'
 }
 ```
 

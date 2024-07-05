@@ -22,7 +22,9 @@ final class ExceptionFactory {
 
     static final String DEPLOYMENT_STATUS_IS_FIELD = "Deployment Status is failed: [%s], please go to [%s] check your deployment.";
 
-    static final String DEPLOYMENT_NOT_FINISHED = "Deployment haven't finished, status is: [%s], please go to [%s] check your deployment.";
+    static final String DEPLOYMENT_NOT_FINISHED = "Deployment hasn't finished, status is: [%s], please go to [%s] check your deployment.";
+
+    static final String PUBLISHING_TYPE_INVALID = "The publishingType is invalid. Accepted values are `AUTOMATIC` and `USER_MANAGED`.";
 
     static final String CHECKING_URL = "https://central.sonatype.com/publishing/deployments";
 
@@ -56,5 +58,9 @@ final class ExceptionFactory {
 
     static GradleException deploymentNotFinished(String deploymentStatus) {
         return new GradleException(String.format(DEPLOYMENT_NOT_FINISHED, deploymentStatus, CHECKING_URL));
+    }
+
+    static GradleException publishingTypeInvalid() {
+        return new GradleException(PUBLISHING_TYPE_INVALID);
     }
 }
