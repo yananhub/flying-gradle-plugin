@@ -92,25 +92,23 @@ public abstract class PublishToCentralPortalTask extends DefaultTask {
                 throw apiNotReturnDeploymentStateField();
             } else if (FAILED.equals(deploymentStatus)) {
                 throw deploymentStatusIsField(deploymentStatus);
+            } else if (isSuccessful(deploymentStatus)) {
+                getLogger().lifecycle("Upload file success! current status: {}.", deploymentStatus);
+                return;
             } else {
-                boolean isSuccessful = PUBLISHING.equals(deploymentStatus) || PUBLISHED.equals(deploymentStatus);
-
-                if (currentPublishingType == PublishingType.USER_MANAGED) {
-                    isSuccessful = isSuccessful || VALIDATED.equals(deploymentStatus);
-                }
-
-                if (isSuccessful) {
-                    getLogger().lifecycle("Upload file success! current status: {}.", deploymentStatus);
-                    return;
-                } else {
-                    ++count;
-                }
+                ++count;
             }
 
             if (count == checkCount) {
                 throw deploymentNotFinished(deploymentStatus);
             }
         }
+    }
+
+    private boolean isSuccessful(String deploymentStatus) {
+        return (publishingType.get() == PublishingType.USER_MANAGED && VALIDATED.equals(deploymentStatus))
+            || PUBLISHING.equals(deploymentStatus)
+            || PUBLISHED.equals(deploymentStatus);
     }
 
     /**
