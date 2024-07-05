@@ -2,11 +2,11 @@ plugins {
     id 'java-gradle-plugin'
     id 'com.gradle.plugin-publish' version '1.2.1'
     id 'signing'
-    id 'tech.yanand.maven-central-publish' version '0.1.0-beta.5'
+    id 'tech.yanand.maven-central-publish' version '1.0.0'
 }
 
 group = 'tech.yanand.gradle'
-version = '1.0.0'
+version = '1.1.0'
 
 repositories {
     mavenCentral()
@@ -94,5 +94,4 @@ javadoc {
 mavenCentral {
     repoDir = layout.buildDirectory.dir('repos/bundles')
     authToken = System.getenv('MAVEN_UPLOAD_TOKEN')
-    publishingType = 'AUTOMATIC'
 }
