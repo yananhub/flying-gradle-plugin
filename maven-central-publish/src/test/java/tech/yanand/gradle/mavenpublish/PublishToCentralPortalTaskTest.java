@@ -1,4 +1,4 @@
-package tech.yanand.gradle;
+package tech.yanand.gradle.mavenpublish;
 
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
@@ -23,17 +23,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.FAILED;
-import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PENDING;
-import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHING;
-import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.VALIDATED;
-import static tech.yanand.gradle.ExceptionFactory.API_NOT_RETURN_DEPLOYMENT_STATE_FIELD;
-import static tech.yanand.gradle.ExceptionFactory.AUTH_TOKEN_NOT_PROVIDED;
-import static tech.yanand.gradle.ExceptionFactory.CHECKING_URL;
-import static tech.yanand.gradle.ExceptionFactory.DEPLOYMENT_NOT_FINISHED;
-import static tech.yanand.gradle.ExceptionFactory.DEPLOYMENT_STATUS_IS_FIELD;
-import static tech.yanand.gradle.ExceptionFactory.PUBLISHING_TYPE_INVALID;
-import static tech.yanand.gradle.ExceptionFactory.UPLOAD_FILE_MUST_PROVIDED;
+import static tech.yanand.gradle.mavenpublish.CentralPortalService.DeploymentStatus.FAILED;
+import static tech.yanand.gradle.mavenpublish.CentralPortalService.DeploymentStatus.PENDING;
+import static tech.yanand.gradle.mavenpublish.CentralPortalService.DeploymentStatus.PUBLISHING;
+import static tech.yanand.gradle.mavenpublish.CentralPortalService.DeploymentStatus.VALIDATED;
+import static tech.yanand.gradle.mavenpublish.ExceptionFactory.API_NOT_RETURN_DEPLOYMENT_STATE_FIELD;
+import static tech.yanand.gradle.mavenpublish.ExceptionFactory.AUTH_TOKEN_NOT_PROVIDED;
+import static tech.yanand.gradle.mavenpublish.ExceptionFactory.CHECKING_URL;
+import static tech.yanand.gradle.mavenpublish.ExceptionFactory.DEPLOYMENT_NOT_FINISHED;
+import static tech.yanand.gradle.mavenpublish.ExceptionFactory.DEPLOYMENT_STATUS_IS_FIELD;
+import static tech.yanand.gradle.mavenpublish.ExceptionFactory.PUBLISHING_TYPE_INVALID;
+import static tech.yanand.gradle.mavenpublish.ExceptionFactory.UPLOAD_FILE_MUST_PROVIDED;
 
 @ExtendWith(MockitoExtension.class)
 class PublishToCentralPortalTaskTest {

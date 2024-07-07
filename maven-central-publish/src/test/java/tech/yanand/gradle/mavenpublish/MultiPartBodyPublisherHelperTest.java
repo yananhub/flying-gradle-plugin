@@ -1,4 +1,4 @@
-package tech.yanand.gradle;
+package tech.yanand.gradle.mavenpublish;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -15,7 +15,7 @@ import java.util.concurrent.Flow;
 import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static tech.yanand.gradle.MultiPartBodyPublisherHelper.CRLF;
+import static tech.yanand.gradle.mavenpublish.MultiPartBodyPublisherHelper.CRLF;
 
 class MultiPartBodyPublisherHelperTest {
 

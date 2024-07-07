@@ -1,4 +1,4 @@
-package tech.yanand.gradle;
+package tech.yanand.gradle.mavenpublish;
 
 import org.gradle.api.GradleException;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,9 +25,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static tech.yanand.gradle.CentralPortalService.DeploymentStatus.PUBLISHING;
-import static tech.yanand.gradle.ExceptionFactory.CHECK_API_HTTP_STATUS_IS_NOT_OK;
-import static tech.yanand.gradle.ExceptionFactory.UPLOAD_API_HTTP_STATUS_IS_NOT_CREATED;
+import static tech.yanand.gradle.mavenpublish.CentralPortalService.DeploymentStatus.PUBLISHING;
+import static tech.yanand.gradle.mavenpublish.ExceptionFactory.CHECK_API_HTTP_STATUS_IS_NOT_OK;
+import static tech.yanand.gradle.mavenpublish.ExceptionFactory.UPLOAD_API_HTTP_STATUS_IS_NOT_CREATED;
 
 @SuppressWarnings("unchecked")
 @ExtendWith(MockitoExtension.class)

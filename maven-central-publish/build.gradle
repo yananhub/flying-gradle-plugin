@@ -2,11 +2,11 @@ plugins {
     id 'java-gradle-plugin'
     id 'com.gradle.plugin-publish' version '1.2.1'
     id 'signing'
-    id 'tech.yanand.maven-central-publish' version '1.0.0'
+    id 'tech.yanand.maven-central-publish' version '1.1.0'
 }
 
 group = 'tech.yanand.gradle'
-version = '1.1.0'
+version = '1.1.1'
 
 repositories {
     mavenCentral()
@@ -38,7 +38,7 @@ gradlePlugin {
             displayName = 'Maven Central Portal Publish Plugin'
             description = 'A plugin that allows you to publish repositories to the Maven Central Portal (new publish process)'
             tags.addAll('maven', 'maven publish', 'maven central', 'maven central portal')
-            implementationClass = 'tech.yanand.gradle.MavenCentralPublishPlugin'
+            implementationClass = 'tech.yanand.gradle.mavenpublish.MavenCentralPublishPlugin'
         }
     }
 }
