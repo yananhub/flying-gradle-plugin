@@ -36,6 +36,7 @@ publishing {
     }
 
     repositories {
+        // Starting from version 1.3.0, it does not need to configure the repository
         maven {
             name = "Local"
             url = layout.buildDirectory.dir('repos/bundles')
@@ -53,6 +54,7 @@ signing {
 }
 
 mavenCentral {
+    // Starting from version 1.3.0, it does not need to configure this item
     repoDir = layout.buildDirectory.dir('repos/bundles')
     // Token for Publisher API calls obtained from Sonatype official,
     // it should be Base64 encoded of "username:password".
@@ -74,4 +76,10 @@ Upload the bundle by using the `publish` and `publishToMavenCentralPortal` tasks
 
 ```shell
 $ ./gradlew publish publishToMavenCentralPortal
+```
+
+Since version 1.3.0, the execution `publishToMavenCentralPortal` task before no longer need to execute `publish` task:
+
+```shell
+$ ./gradlew publishToMavenCentralPortal
 ```

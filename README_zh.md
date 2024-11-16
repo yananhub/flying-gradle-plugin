@@ -35,6 +35,7 @@ publishing {
     }
 
     repositories {
+        // 从1.3.0版本开始，不需要配置该仓库
         maven {
             name = "Local"
             url = layout.buildDirectory.dir('repos/bundles')
@@ -52,6 +53,7 @@ signing {
 }
 
 mavenCentral {
+    // 从1.3.0版本开始，不需要配置该项
     repoDir = layout.buildDirectory.dir('repos/bundles')
     // 从 Sonatype 官方获取的 Publisher API 调用的 token，应为 Base64 编码后的 username:password
     authToken = '<your token>'
@@ -67,8 +69,14 @@ mavenCentral {
 
 关于发布 Maven 组件的要求详情，请参考 [Sonatype 官方文档](https://central.sonatype.org/publish/requirements/)。
 
-通过使用`publish`和`publishToMavenCentralPortal`任务上传bundle:
+通过使用`publish`和`publishToMavenCentralPortal`任务上传bundle：
 
 ```shell
 $ ./gradlew publish publishToMavenCentralPortal
+```
+
+从1.3.0版本开始，在执行`publishToMavenCentralPortal`任务前不再需要执行`publish`任务：
+
+```shell
+$ ./gradlew publishToMavenCentralPortal
 ```

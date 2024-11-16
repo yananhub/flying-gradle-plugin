@@ -63,8 +63,10 @@ public interface MavenCentralExtension {
      * The repository directory for zipping the bundle.
      * It is usually a local directory published by the Maven publish plugin.
      *
+     * @deprecated Since 1.3.0, it is no longer needed.
      * @return Repository directory
      */
+    @Deprecated(since = "1.3.0", forRemoval = true)
     DirectoryProperty getRepoDir();
 
     /**

@@ -18,6 +18,11 @@ package tech.yanand.gradle.mavenpublish;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
+import org.gradle.api.file.Directory;
+import org.gradle.api.provider.Provider;
+import org.gradle.api.publish.PublishingExtension;
+import org.gradle.api.tasks.Delete;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.bundling.Zip;
 
@@ -33,13 +38,27 @@ public abstract class MavenCentralPublishPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
-        MavenCentralExtension extension = project.getExtensions()
-                .create(MavenCentralExtension.class, MavenCentralExtension.NAME, DefaultMavenCentralExtension.class, project.getObjects());
+        Provider<Directory> bundleRepoDir = project.getLayout().getBuildDirectory().dir("repos/bundles");
+
+        PublishingExtension publishingExtension = project.getExtensions().getByType(PublishingExtension.class);
+        publishingExtension.getRepositories().maven(repo -> {
+            repo.setName("mavenCentralLocal");
+            repo.setUrl(bundleRepoDir);
+        });
+
         TaskContainer taskContainer = project.getTasks();
+
+        Delete deleteTask = taskContainer.register("deleteBundleRepo", Delete.class).get();
+        deleteTask.setGroup(CENTRAL_PUBLISH_TASK_GROUP);
+        deleteTask.delete(bundleRepoDir);
+
+        Task publishTask = taskContainer.getByName("publish");
+        publishTask.dependsOn(deleteTask);
 
         Zip zipTask = taskContainer.register("zipBundleForUpload", Zip.class).get();
         zipTask.setGroup(CENTRAL_PUBLISH_TASK_GROUP);
-        zipTask.from(extension.getRepoDir());
+        zipTask.from(bundleRepoDir);
+        zipTask.dependsOn(publishTask);
 
         PublishToCentralPortalTask uploadTask = taskContainer
                 .register(PublishToCentralPortalTask.NAME, PublishToCentralPortalTask.class).get();

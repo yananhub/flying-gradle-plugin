@@ -71,6 +71,7 @@ class DefaultMavenCentralExtension implements MavenCentralExtension {
         return authToken;
     }
 
+    @SuppressWarnings("removal")
     @Override
     public DirectoryProperty getRepoDir() {
         return repoDir;
